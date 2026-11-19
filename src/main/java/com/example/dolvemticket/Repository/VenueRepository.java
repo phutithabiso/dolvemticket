@@ -1,14 +1,12 @@
 package com.example.dolvemticket.Repository;
 
 import com.example.dolvemticket.Entity.Venue;
-import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface VenueRespository extends JpaRepository<Venue,Long> {
+public interface VenueRepository extends JpaRepository<Venue,Long> {
     @Override
-   Optional<Venue> findById(Long VenueId);
+    Optional<Venue> findById(Long VenueId);
     boolean findVenueByName(String Venuename);
-
 }

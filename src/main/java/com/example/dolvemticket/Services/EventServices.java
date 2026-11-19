@@ -16,7 +16,7 @@ public class EventServices {
     @Autowired
     private final EventRepository eventRepository;
     private final EventCategoryRepository categoryRepository;
-    private final VenueRespository venueRepository;
+    private final VenueRepository venueRepository;
     // CREATE
     @Transactional
     public EventResponse createEvent(EventRequest request) {
