@@ -19,7 +19,9 @@ public class VenueServices {
         venue.setName(request.name());
         venue.setAddress(request.address());
         venue.setCity(request.city());
+        venue.setProvince(request.province());
         venue.setCountry(request.country());
+        venue.setCapacity(request.capacity());
         Venue saveVenue = repo.save(venue);
         return mapToResponse(saveVenue);
     }
@@ -44,7 +46,9 @@ public class VenueServices {
         venue.setName(request.name());
         venue.setAddress(request.address());
         venue.setCity(request.city());
+        venue.setProvince(request.province());
         venue.setCountry(request.country());
+        venue.setCapacity(request.capacity());
         Venue saveVenue = repo.save(venue);
         return mapToResponse(saveVenue);
     }

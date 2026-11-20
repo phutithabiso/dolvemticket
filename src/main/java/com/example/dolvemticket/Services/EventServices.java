@@ -1,10 +1,13 @@
+
 package com.example.dolvemticket.Services;
 
 import com.example.dolvemticket.DTO.*;
 import com.example.dolvemticket.Entity.*;
 import com.example.dolvemticket.Repository.*;
+import com.example.dolvemticket.Exception.BadRequestException;
+import com.example.dolvemticket.Exception.ResourceNotFoundException;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,19 +15,25 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class EventServices {
+
     private final EventRepository eventRepository;
     private final EventCategoryRepository categoryRepository;
     private final VenueRepository venueRepository;
+
     // CREATE
-    @Transactional
     public EventResponse createEvent(EventRequest request) {
+
         validateDates(request);
+
         EventCategory category = categoryRepository.findById(request.categoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Category not found"));
 
         Venue venue = venueRepository.findById(request.venueId())
-                .orElseThrow(() -> new RuntimeException("Venue not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Venue not found"));
 
         Event event = new Event();
 
@@ -36,11 +45,13 @@ public class EventServices {
         event.setCategory(category);
         event.setVenue(venue);
 
-        return mapToResponse(eventRepository.save(event));
+        Event savedEvent = eventRepository.save(event);
+
+        return mapToResponse(savedEvent);
     }
 
     // READ ALL
-    @Transactional()
+    @Transactional(readOnly = true)
     public List<EventResponse> getAllEvents() {
 
         return eventRepository.findAll()
@@ -50,29 +61,32 @@ public class EventServices {
     }
 
     // READ ONE
-    @Transactional()
+    @Transactional(readOnly = true)
     public EventResponse getEventById(Long eventId) {
 
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new RuntimeException("Event not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Event not found"));
 
         return mapToResponse(event);
     }
 
     // UPDATE
-    @Transactional
     public EventResponse updateEvent(Long eventId, EventRequest request) {
 
         validateDates(request);
 
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new RuntimeException("Event not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Event not found"));
 
         EventCategory category = categoryRepository.findById(request.categoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Category not found"));
 
         Venue venue = venueRepository.findById(request.venueId())
-                .orElseThrow(() -> new RuntimeException("Venue not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Venue not found"));
 
         event.setTitle(request.title());
         event.setDescription(request.description());
@@ -86,11 +100,10 @@ public class EventServices {
     }
 
     // DELETE
-    @Transactional
     public void deleteEvent(Long eventId) {
 
         if (!eventRepository.existsById(eventId)) {
-            throw new RuntimeException("Event not found");
+            throw new ResourceNotFoundException("Event not found");
         }
 
         eventRepository.deleteById(eventId);
@@ -99,9 +112,13 @@ public class EventServices {
     // VALIDATE DATES
     private void validateDates(EventRequest request) {
 
+        if (request.startDate() == null || request.endDate() == null) {
+            throw new BadRequestException("Start date and end date are required");
+        }
+
         if (!request.endDate().isAfter(request.startDate())) {
-            throw new IllegalArgumentException("Event end date must be after start date"
-            );
+            throw new BadRequestException(
+                    "Event end date must be after start date");
         }
     }
 
@@ -124,5 +141,3 @@ public class EventServices {
         );
     }
 }
-
-
