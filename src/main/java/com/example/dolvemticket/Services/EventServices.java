@@ -3,17 +3,16 @@ package com.example.dolvemticket.Services;
 import com.example.dolvemticket.DTO.*;
 import com.example.dolvemticket.Entity.*;
 import com.example.dolvemticket.Repository.*;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class EventServices {
-    @Autowired
     private final EventRepository eventRepository;
     private final EventCategoryRepository categoryRepository;
     private final VenueRepository venueRepository;

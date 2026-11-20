@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface EventCategoryRepository  extends JpaRepository<EventCategory,Long> {
-    @Override
-    Optional<EventCategory> findById(Long categoryId);
-    EventCategory findByName(String name);
+    Optional<EventCategory> findByCategoryName(String categoryName);
+    boolean existsByCategoryName(String categoryName);
 }
