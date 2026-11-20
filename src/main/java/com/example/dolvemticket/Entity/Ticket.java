@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 
 @Entity
-@Table(name = "tickes ")
+@Table(name = "tickets ")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,26 +19,26 @@ import java.time.Instant;
 public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long TicketId;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id", nullable = false)
     private Event  event;
 
     @NotBlank(message = "Ticket type is required")
     @Size(max = 50,message = " Ticket type cannot exceed 50 character")
     @Column(length = 50, nullable = false, name = "ticket_type")
-    private String ticket_type;
+    private String ticketType;
 
     @NotNull(message = "Ticket is required")
     @DecimalMin(value= "0.00",message = "message cannot be negative")
     @Column(nullable = false,name ="ticket price",precision = 19,scale = 2)
-    private BigDecimal ticket_price;
+    private BigDecimal ticketPrice;
 
     @NotNull(message = "Total quantity is required")
     @Positive(message = "Ticket quantity cannot be negative")
     @Column(nullable = false,name =" ticket quantity")
-    private int ticket_quantity;
+    private int ticketQuantity;
 
     @NotNull(message = "Available quantity is required")
     @Positive(message = "Available quantity cannot be negative")
